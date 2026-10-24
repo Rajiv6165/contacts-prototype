@@ -8,7 +8,13 @@ import { DetailsPanel } from './components/DetailsPanel'
 export default function App() {
   // One list is the single source of truth; both views only read from it.
   const [contacts, setContacts] = useState(seedContacts)
-  const [view, setView] = useState<View>('table')
+  const [view, setView] = useState<View>(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search).get('view')
+      if (p === 'board' || p === 'table') return p
+    }
+    return 'table'
+  })
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = contacts.find((c) => c.id === selectedId) ?? null
 
